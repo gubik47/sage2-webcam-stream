@@ -1,0 +1,15 @@
+{
+	"main_script": "webcam_stream.js",
+	"icon": "webcam_stream.png",
+	"width": 640,
+	"height": 360,
+	"animation": true,
+	"dependencies": [
+	],
+	"title": "Webcam stream",
+	"version": "1.0.0",
+	"description": "Webcam video streaming",
+	"keywords": [ "stream", "webcam", "video" ],
+	"author": "Jakub Štefan <gubaxxxl@gmail.com>",
+	"license": "SAGE2-Software-License"
+}
