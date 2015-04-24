@@ -44,42 +44,6 @@ var webcam_stream = SAGE2_App.extend( {
         this.localMediaStream = null;
         // indicates whether the stream is paused
         this.isStreamPaused = false;
-        // array of available filters in filter.css
-        this.filters = [
-            "", 
-            "sepia", 
-            "grayscale", 
-            "blur", 
-            "brightness", 
-            "contrast", 
-            "hue-rotate", 
-            "saturate", 
-            "invert"
-        ];
-
-        // id of currently applied filter
-        this.filterIdx = 0;
-    },
-
-    // inserts a css file to the document with filter definitions
-    insertFilters: function() {
-        $('head').append('<link rel="stylesheet" href="uploads/apps/webcam_stream/filter.css" type="text/css" />');
-    },
-
-    // applies next or previous filter in array to the stream
-    // option fw: next, bw: previous
-    applyFilter: function(option) {
-        if (option === "fw") {
-            // move forwards in array of filters
-            this.filterIdx = mod(this.filterIdx + 1, this.filters.length);
-        } else if (option === "bw") {
-            // move backwards in array of filters
-            this.filterIdx = mod(this.filterIdx - 1, this.filters.length);
-        } else {
-            // remove any filter
-            this.filterIdx = 0;
-        }
-        this.video.className = "sageItem " + this.filters[this.filterIdx];
     },
 
     init: function(id, width, height, resrc, date) {    
@@ -89,16 +53,10 @@ var webcam_stream = SAGE2_App.extend( {
         arguments.callee.superClass.init.call(this, id, "video", width, height, resrc, date);
 
         // insert css file with video filters
-        this.insertFilters();
+        filter.insertFilters();
 
         // start webcam stream
         this.startStream();
-
-        /*this.controls.addTextInput({action: function(text) {
-            console.log("HXX");
-        }});*/
-
-        this.controls.finishedAddingControls(); // Important;
     },
 
     pauseStream: function() {
@@ -165,15 +123,15 @@ var webcam_stream = SAGE2_App.extend( {
                     break;
                 }
                 case "a": {
-                    this.applyFilter("fw");
+                    filter.applyFilter("fw");
                     break;
                 }
                 case "d": {
-                    this.applyFilter("bw");
+                    filter.applyFilter("bw");
                     break;
                 }
                 case "r": {
-                    this.applyFilter("reset");
+                    filter.applyFilter("reset");
                     break;
                 }
                 case "w": {
