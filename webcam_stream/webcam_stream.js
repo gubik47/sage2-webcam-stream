@@ -63,16 +63,7 @@ var webcam_stream = SAGE2_App.extend( {
 
     // inserts a css file to the document with filter definitions
     insertFilters: function() {
-        var css = document.createElement("link")
-        css.setAttribute("rel", "stylesheet")
-        css.setAttribute("type", "text/css")
-        css.setAttribute("href", "uploads/apps/webcam_stream/filter.css")
-        document.getElementsByTagName("head")[0].appendChild(css)
-    },
-
-    // removes a css file to the document with filter definitions
-    removeFilters: function() {
-        document.querySelector("link[href~=\"filters.css\"]").remove();
+        $('head').append('<link rel="stylesheet" href="uploads/apps/webcam_stream/filter.css" type="text/css" />');
     },
 
     // applies next or previous filter in array to the stream
