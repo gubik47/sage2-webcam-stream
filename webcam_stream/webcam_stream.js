@@ -53,7 +53,7 @@ var webcam_stream = SAGE2_App.extend( {
         arguments.callee.superClass.init.call(this, id, "video", width, height, resrc, date);
 
         // insert css file with video filters
-        filter.insertFilters();
+        filterObj.insertFilterCss();
 
         // start webcam stream
         this.startStream();
@@ -123,25 +123,28 @@ var webcam_stream = SAGE2_App.extend( {
                     break;
                 }
                 case "a": {
-                    filter.applyFilter("fw");
+                    filterObj.applyFilter("bw");
+                    this.log("Active filter: " + filterObj.filters[filterObj.activeFilterId].name);
                     break;
                 }
                 case "d": {
-                    filter.applyFilter("bw");
+                    filterObj.applyFilter("fw");
+                    this.log("Active filter: " + filterObj.filters[filterObj.activeFilterId].name);
                     break;
                 }
                 case "r": {
-                    filter.applyFilter("reset");
+                    filterObj.applyFilter("reset");
+                    this.log("Active filter: " + filterObj.filters[filterObj.activeFilterId].name);
                     break;
                 }
                 case "w": {
                     //increment();
-                    console.log("Increment.");
+                    filterObj.adjustFilter("fw");
                     break;
                 }
                 case "s": {
                     //decrement();
-                    console.log("Decrement");
+                    filterObj.adjustFilter("bw");
                     break;
                 }
                 default: {
