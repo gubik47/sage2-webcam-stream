@@ -85,6 +85,14 @@ var webcam_stream = SAGE2_App.extend( {
             this.log("getUserMedia not supported.");
         }
         this.log("Webcam stream started.");
+        console.log(
+            "Controls:\n" +
+            "\t P - Pause/resume stream \n" +
+            "\t A/D - Cycle through available filters \n" +
+            "\t W - Increase value of currently applied filter \n" +
+            "\t S - Decrease value of currently applied filter \n" +
+            "\t R - Remove any applied filter"
+        );
     },
 
     //load function allows application to begin with a particular state.  Needed for remote site collaboration. 
