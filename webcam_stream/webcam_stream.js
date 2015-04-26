@@ -8,6 +8,8 @@
 //
 // Copyright (c) 2014
 
+var webcamApp;
+
 var webcam_stream = SAGE2_App.extend( {
     construct: function() {
         // call the constructor of the base class
@@ -38,6 +40,8 @@ var webcam_stream = SAGE2_App.extend( {
         this.localMediaStream = null;
         // indicates whether the stream is paused
         this.isStreamPaused = false;
+        // global app handler
+        webcamApp = this;
     },
 
     init: function(id, width, height, resrc, date) {    
