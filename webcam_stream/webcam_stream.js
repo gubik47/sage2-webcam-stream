@@ -8,18 +8,12 @@
 //
 // Copyright (c) 2014
 
-// fix for JavaScript weird modulo computation with negative numbers
-function mod(n, m) {
-    return ((n % m) + m) % m;
-}
-
 var webcam_stream = SAGE2_App.extend( {
     construct: function() {
         // call the constructor of the base class
         arguments.callee.superClass.construct.call(this);
 
-        this.resizeEvents = "continuous";//see below for other options
-        this.enableControls = true;
+        this.resizeEvents = "continuous";
 
         // feature check variable for getUserMedia availability
         navigator.getUserMedia = navigator.getUserMedia ||
@@ -47,12 +41,9 @@ var webcam_stream = SAGE2_App.extend( {
     },
 
     init: function(id, width, height, resrc, date) {    
-        // data: contains initialization parameters, such as `x`, `y`, `width`, `height`, and `date` 
-        // call super-class "init"
-
         arguments.callee.superClass.init.call(this, id, "video", width, height, resrc, date);
 
-        // insert css file with video filters
+        // insert css file with default filter values
         filterObj.insertFilterCss();
 
         // start webcam stream
@@ -71,8 +62,7 @@ var webcam_stream = SAGE2_App.extend( {
         // contains the app object itself
         var self = this;
 
-        //console.log(this);
-
+        // init video stream with getUserMedia API
         if (navigator.getUserMedia) {
             navigator.getUserMedia(this.constraints,
                 function(stream) {
@@ -95,22 +85,19 @@ var webcam_stream = SAGE2_App.extend( {
 
     //load function allows application to begin with a particular state.  Needed for remote site collaboration. 
     load: function(state, date) {
-        //your load code here- state should define the initial/current state of the application
     },
 
     draw: function(date) {
     },
 
     resize: function(date) {
-        // to do:  may be a super class resize
-        // or your resize code here
-        //this.refresh(date); //redraw after resize
     },
 
     event: function(type, position, user, data, date) {
         if (type === "keyboard") {
             switch (data.character) {
                 case "p": {
+                    // pause (freeze) the stream, if already paused resume stream
                     if (this.isStreamPaused == false) {
                         this.log("Stream paused.");
                         this.pauseStream();
@@ -123,27 +110,30 @@ var webcam_stream = SAGE2_App.extend( {
                     break;
                 }
                 case "a": {
+                    // cycle backwards through araay of available filters
                     filterObj.applyFilter("bw");
                     this.log("Active filter: " + filterObj.filters[filterObj.activeFilterId].name);
                     break;
                 }
                 case "d": {
+                    // cycle forwards through araay of available filters
                     filterObj.applyFilter("fw");
                     this.log("Active filter: " + filterObj.filters[filterObj.activeFilterId].name);
                     break;
                 }
                 case "r": {
+                    // reset, removes any applied filter
                     filterObj.applyFilter("reset");
                     this.log("Active filter: " + filterObj.filters[filterObj.activeFilterId].name);
                     break;
                 }
                 case "w": {
-                    //increment();
+                    // increments the value of currently applied filter by set amount
                     filterObj.adjustFilter("fw");
                     break;
                 }
                 case "s": {
-                    //decrement();
+                    // decrements the value of currently applied filter by set amount
                     filterObj.adjustFilter("bw");
                     break;
                 }
@@ -153,16 +143,9 @@ var webcam_stream = SAGE2_App.extend( {
                 }
             }
         }
-        // may need to redraw 
-        //this.refresh(date);
     },
 
     move: function(date) {
-        // this.sage2_x, this.sage2_y give x,y position of upper left corner of app in global wall coordinates
-                // this.sage2_width, this.sage2_height give width and height of app in global wall coordinates
-                // date: when it happened
-        
-        //this.refresh(date);
     },
 
     quit: function() {
