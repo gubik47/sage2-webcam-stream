@@ -47,8 +47,8 @@ var webcam_stream = SAGE2_App.extend( {
         this.maxFPS = 20.0;
     },
 
-    init: function(id, width, height, resrc, date) {    
-        arguments.callee.superClass.init.call(this, id, "video", width, height, resrc, date);
+    init: function(data) {    
+        arguments.callee.superClass.init.call(this, "video", data);
 
         // insert css file with default filter values
         filterObj.insertFilterCss();
