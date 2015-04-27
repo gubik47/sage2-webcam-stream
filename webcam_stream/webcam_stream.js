@@ -29,7 +29,9 @@ var webcam_stream = SAGE2_App.extend( {
                     "minWidth": "1280",
                     "minHeight": "720",
                     "maxWidth": "1280",
-                    "maxHeight": "720"
+                    "maxHeight": "720",
+                    "minFrameRate": "20",
+                    "maxFrameRate": "60"
                 },
                 "optional": []
             }
@@ -42,6 +44,7 @@ var webcam_stream = SAGE2_App.extend( {
         this.isStreamPaused = false;
         // global app handler
         webcamApp = this;
+        this.maxFPS = 20.0;
     },
 
     init: function(id, width, height, resrc, date) {    
