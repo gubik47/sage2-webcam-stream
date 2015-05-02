@@ -8,6 +8,7 @@
 //
 // Copyright (c) 2014
 
+// global app handler
 var webcamApp;
 
 var webcam_stream = SAGE2_App.extend( {
@@ -17,7 +18,7 @@ var webcam_stream = SAGE2_App.extend( {
 
         this.resizeEvents = "continuous";
 
-        // Need to set this to true in order to tell SAGE2 that you will be needing widget controls for this app
+        // enable widget controls
         this.enableControls = true;
 
         // feature check variable for getUserMedia availability
@@ -47,8 +48,19 @@ var webcam_stream = SAGE2_App.extend( {
         this.isStreamPaused = false;
         // global app handler
         webcamApp = this;
-
+        // max SAGE2 fps
         this.maxFPS = 60.0;
+        // id of active video src
+        this.activeVideoSrc = 0;
+    },
+
+    gotSources: function(sourceInfos) {
+        $("#" + webcamApp.id).append('<ul id="cam-list" style="display:none;"></ul>');
+        for (var i = 0; i < sourceInfos.length; i++) {
+            if (sourceInfos[i].kind === "video") {
+                $("#cam-list").append('<li>' + sourceInfos[i].id + '</li>');
+            }
+        }
     },
 
     init: function(data) {    
@@ -57,19 +69,27 @@ var webcam_stream = SAGE2_App.extend( {
         // insert css file with default filter values
         filterObj.insertFilterCss();
 
+        if (typeof MediaStreamTrack === 'undefined' || typeof MediaStreamTrack.getSources === 'undefined') {
+            this.log("No support for MediaStreamTrack.");
+        } else {
+            MediaStreamTrack.getSources(this.gotSources);
+        }
+
         // start webcam stream
         this.startStream();
 
+        // print app controls help
         console.log(
             "Controls:\n" +
             "\t P - Pause/resume stream \n" +
             "\t A/D - Cycle through available filters \n" +
             "\t W - Increase value of currently applied filter \n" +
             "\t S - Decrease value of currently applied filter \n" +
-            "\t R - Remove any applied filter"
+            "\t R - Remove any applied filter \n" +
+            "\t C - Change video capture source"
         );
 
-
+        // register custom button types
         this.controls.addButtonType("480p", _480pButton);
         this.controls.addButtonType("720p", _720pButton);
         this.controls.addButtonType("1080p", _1080pButton);
@@ -177,13 +197,28 @@ var webcam_stream = SAGE2_App.extend( {
         this.startStream();
     },
 
+    // set new video maxFPS
     setFPS: function(fps) {
         this.log("FPS: " + fps);
         this.constraints.video.mandatory.maxFrameRate = fps;
         this.startStream();
     },
 
-    //load function allows application to begin with a particular state.  Needed for remote site collaboration. 
+    // changes video capture source
+    changeSource: function() {
+        // number of capture source
+        var srcNr = mod((this.activeVideoSrc + 1), $("#cam-list li").length);
+        // id of capture source
+        var srcId = $("#cam-list li:nth-child(" + (srcNr + 1) + ")").text();
+        // update video constraints with new srcId
+        this.constraints.video.optional[0] = { sourceId: srcId };
+        // restart stream
+        this.startStream();
+        // update number of active capture source variable
+        this.activeVideoSrc = srcNr;
+        this.log("Video capture source: " + srcNr);
+    },
+
     load: function(state, date) {
     },
 
@@ -232,6 +267,10 @@ var webcam_stream = SAGE2_App.extend( {
                 case "s": {
                     // decrements the value of currently applied filter by set amount
                     filterObj.adjustFilter("bw");
+                    break;
+                }
+                case "c": {
+                    this.changeSource();
                     break;
                 }
                 default: {
