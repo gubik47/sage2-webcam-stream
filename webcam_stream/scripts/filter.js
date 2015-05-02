@@ -60,6 +60,8 @@ var filterObj = {
             return false;
         }
 
+        webcamApp.log("Active filter: " + this.filters[this.activeFilterId].name);
+
         // apply new filter
         $("video.sageItem").attr("class", "sageItem " + this.filters[this.activeFilterId].name);
     },
